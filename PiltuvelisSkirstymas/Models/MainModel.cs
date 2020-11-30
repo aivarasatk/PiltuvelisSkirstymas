@@ -10,6 +10,13 @@ namespace PiltuvelisSkirstymas.Models
         }
 
         private bool _isLoading;
-        public RelayCommand Ok { get; set; }
+
+        private string _genFileFullPath;
+        private string _operationsFileFullPath;
+        private int _lineStart;
+
+        public RelayCommand SelectGenFile { get; set; }
+        public RelayCommand SelectOperationsFile { get; set; }
+        public AsyncRelayCommand ExecuteExport { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace PiltuvelisSkirstymas.IoC
             Ioc.Default.ConfigureServices(new ServiceCollection()
                 .AddSingleton<MainViewModel>()
                 .AddSingleton<ILogService, LogService>()
+                .AddSingleton<IEipReader, EipReader>()
+                .AddSingleton<IEipWriter, EipWriter>()
                 .BuildServiceProvider());
         }
     }

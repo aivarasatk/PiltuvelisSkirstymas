@@ -6,6 +6,6 @@ namespace IO
 {
     public interface IEipReader
     {
-        Task<IEnumerable<I07>> GetParsedEipContents(string filePath);
+        Task<IEnumerable<I07Input>> GetParsedEipContentsAsync(string filePath);
     }
 }

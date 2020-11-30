@@ -29,17 +29,28 @@ namespace IO
             return input;
         }
 
-        private async Task<IEnumerable<string>> GetEipContentsByLine(string eipFileName) 
-            => await File.ReadAllLinesAsync(eipFileName, Encoding.GetEncoding("iso-8859-13"));//Lithuanian encoding
-        public async Task<IEnumerable<I07>> GetParsedEipContents(string filePath)
+        private async Task<IEnumerable<string>> GetEipContentsByLine(string eipFileName)
         {
-            var content = await GetEipContentsByLine(filePath);
-            var prunedEipFile = string.Join("", PrunedEipFile(content));
-            var fileWithEscapedChars = RemoveInvalidXMLChars(EscapeCharacters(prunedEipFile));
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            return await File.ReadAllLinesAsync(eipFileName, Encoding.GetEncoding("iso-8859-13"));//Lithuanian encoding
+        }
+        public async Task<IEnumerable<I07Input>> GetParsedEipContentsAsync(string filePath)
+        {
+            try
+            {
+                var content = await GetEipContentsByLine(filePath);
+                var prunedEipFile = string.Join("", PrunedEipFile(content));
+                var fileWithEscapedChars = RemoveInvalidXMLChars(EscapeCharacters(prunedEipFile));
 
-            var xmlSerializer = new XmlSerializer(typeof(I06));
-            using var stringReader = new StringReader(fileWithEscapedChars);
-            return ((I06)xmlSerializer.Deserialize(stringReader)).I07;
+                var xmlSerializer = new XmlSerializer(typeof(I06Input));
+                using var stringReader = new StringReader(fileWithEscapedChars);
+                return ((I06Input)xmlSerializer.Deserialize(stringReader)).I07;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"Failed to parse eip contents: {ex.Message}",ex);
+            }
+            
         }
 
         /// <summary>

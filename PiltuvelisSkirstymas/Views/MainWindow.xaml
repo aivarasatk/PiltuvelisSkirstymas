@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:model="clr-namespace:PiltuvelisSkirstymas.Models"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:i = "http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:us="clr-namespace:PiltuvelisSkirstymas.Views.UserControls"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
+        TextElement.FontWeight="Normal"
         TextElement.FontSize="14"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
@@ -16,18 +16,87 @@
         mc:Ignorable="d"
         Title="MainWindow"
         ResizeMode="CanResizeWithGrip"
-        MinWidth="400"
-        MinHeight="400"
+        MinWidth="550"
+        MinHeight="330"
+        Width="650"
+        Height="330"
         d:DataContext="{d:DesignInstance d:Type=model:MainModel}">
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         
-        <Grid Visibility="Visible">
-            <materialDesign:Card UniformCornerRadius="14" Padding="4" Width="50" Height="50">
-                <ProgressBar Height="30" Width="30" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" />
-            </materialDesign:Card>
+        <Grid Margin="32,32,32,16" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--GEN file selection row-->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                   Text="Pasirinkite GEN .eip failą:"
+                   Margin="0,0,16,0"/>
+            <TextBox Grid.Row="0" Grid.Column="1"
+                 IsReadOnly="True"
+                 Margin="0,0,24,0"
+                 Text="{Binding GenFileFullPath}"/>
+            <Button Grid.Row="0" Grid.Column="2"
+                Content="Pasirinkti"
+                Command="{Binding SelectGenFile}"/>
+
+            <!--Operation numbers file selection row-->
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                   Text="Pasirinkite operacijų numerių failą:"
+                   Margin="0,16,16,0"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
+                 IsReadOnly="False"
+                 Margin="0,16,24,0"
+                 Text="{Binding OperationsFileFullPath}"/>
+            <Button Grid.Row="1" Grid.Column="2"
+                Content="Pasirinkti"
+                Margin="0,16,0,0"
+                Command="{Binding SelectOperationsFile}"/>
+
+            <!--GEN file starting line-->
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                   Text="Duomenų eilutės pradžia (imtinai):"
+                   Margin="0,16,16,0"/>
+            <TextBox Grid.Row="2" Grid.Column="1"
+                 Margin="0,16,16,0"
+                 HorizontalAlignment="Left"
+                 Width="50"
+                 Text="{Binding LineStart}"/>
+
+            <!--Execute-->
+            <Button  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                 Content="Generuoti"
+                 Command="{Binding ExecuteExport}"
+                 Width="100"
+                 Margin="0,32,0,0"/>
+
+            <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+              Grid.Column="0" Grid.ColumnSpan="3"
+              Grid.Row="0" Grid.RowSpan="3">
+                <materialDesign:Card UniformCornerRadius="14" Padding="4" Width="50" Height="50">
+                    <ProgressBar Height="30" Width="30" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" />
+                </materialDesign:Card>
+            </Grid>
         </Grid>
+
+        <us:StatusBar Grid.Row="1"/>
     </Grid>
 </Window>
