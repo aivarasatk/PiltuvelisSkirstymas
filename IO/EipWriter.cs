@@ -17,22 +17,11 @@ namespace IO
         }
         public async Task WriteAsync(I06Output output)
         {
-            var emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
-            var settings = new XmlWriterSettings
-            {
-                Indent = true,
-                OmitXmlDeclaration = true
-            };
-
-            using var stringWriter = new StringWriter();
-            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
-
-            var serializer = new XmlSerializer(typeof(I06Output));
-            serializer.Serialize(xmlWriter, output, emptyNamespaces);
+            var fileContents = output.XmlSerialize();
 
             await File.WriteAllTextAsync(
-                Path.Combine(FileDirectory, $"Eksportas-{DateTime.Now:yyyy-MM-dd hh_mm_ss}.eip"),
-                stringWriter.ToString());
+                Path.Combine(FileDirectory, $"Dukteriniu importas - {DateTime.Now:yyyy-MM-dd hh_mm_ss}.eip"),
+                fileContents);
         }
     }
 }

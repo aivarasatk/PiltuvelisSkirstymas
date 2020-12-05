@@ -3,27 +3,36 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Win32;
 using PiltuvelisSkirstymas.Enums;
 using PiltuvelisSkirstymas.Models;
-using PiltuvelisSkirstymas.Services;
+using PiltuvelisSkirstymas.Services.Mapper;
 using PiltuvelisSkirstymas.Services.Logger;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace PiltuvelisSkirstymas.ViewModels
 {
     public class MainViewModel : ViewModelBase<MainModel>
     {
+        private bool _fileSelectWasOpened;
+
         private readonly ILogService _logger;
         private readonly IEipReader _eipReader;
         private readonly IEipWriter _eipWriter;
+        private readonly IOperationsReader _operationsReader;
+        private readonly IMapper _mapper;
 
         public MainViewModel(ILogService logger,
             IEipReader eipReader,
-            IEipWriter eipWriter)
+            IEipWriter eipWriter,
+            IOperationsReader operationsReader,
+            IMapper mapper)
         {
-            _logger = logger;
-            _eipReader = eipReader;
-            _eipWriter = eipWriter;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _eipReader = eipReader ?? throw new ArgumentNullException(nameof(eipReader));
+            _eipWriter = eipWriter ?? throw new ArgumentNullException(nameof(eipWriter));
+            _operationsReader = operationsReader ?? throw new ArgumentNullException(nameof(operationsReader));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             InitializeModel();
         }
@@ -35,16 +44,29 @@ namespace PiltuvelisSkirstymas.ViewModels
             Model.ExecuteExport = new AsyncRelayCommand(OnExecuteExport);
         }
 
-        private void GenFileSelect(string fileExtension) 
-            => Model.GenFileFullPath = FileSelect(fileExtension);
+        private void GenFileSelect(string fileExtension)
+        {
+            Model.GenFileFullPath = FileSelect(fileExtension);
+            Model.GenFileName = Path.GetFileName(Model.GenFileFullPath);
+        }
 
         private void OperationsFileSelect(string fileExtension)
-            => Model.OperationsFileFullPath = FileSelect(fileExtension);
+        {
+            Model.OperationsFileFullPath = FileSelect(fileExtension);
+            Model.OperationsFileName = Path.GetFileName(Model.OperationsFileFullPath);
+        }
 
         private string FileSelect(string fileExtension)
         {
             Model.IsLoading = true;
             var fileSelectDialog = new OpenFileDialog();
+
+            if (!_fileSelectWasOpened)
+            {
+                fileSelectDialog.InitialDirectory = Directory.GetCurrentDirectory();
+                _fileSelectWasOpened = true;
+            }
+            
             fileSelectDialog.Filter = $"File (*.{fileExtension})|*.{fileExtension}";
 
             var result = fileSelectDialog.ShowDialog();
@@ -68,7 +90,8 @@ namespace PiltuvelisSkirstymas.ViewModels
             try
             {
                 var eipData = await _eipReader.GetParsedEipContentsAsync(Model.GenFileFullPath);
-                var output = EipTransformer.ToOutput(eipData, Model.LineStart);
+                var operationCodes = await _operationsReader.OperationCodes(Model.OperationsFileFullPath);
+                var output = _mapper.MapToOutput(eipData.Where(e => e.LineNr >= Model.LineStart), operationCodes);
                 await _eipWriter.WriteAsync(new IO.Dto.I06Output(output.ToArray()));
 
                 ShowFadingStatusBarMessage(MessageType.Information, "Baigta. Sugeneruotas failas išvesties aplanke");

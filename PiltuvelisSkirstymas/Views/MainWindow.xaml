@@ -25,6 +25,7 @@
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </Grid.Resources>
+        
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -48,49 +49,52 @@
 
             <!--GEN file selection row-->
             <TextBlock Grid.Row="0" Grid.Column="0"
-                   Text="Pasirinkite GEN .eip failą:"
-                   Margin="0,0,16,0"/>
+                       Text="Pasirinkite GEN .eip failą:"
+                       Margin="0,0,16,0"/>
             <TextBox Grid.Row="0" Grid.Column="1"
-                 IsReadOnly="True"
-                 Margin="0,0,24,0"
-                 Text="{Binding GenFileFullPath}"/>
+                     IsReadOnly="True"
+                     Margin="0,0,24,0" 
+                     Text="{Binding GenFileName}"
+                     ToolTip="{Binding GenFileFullPath}"/>
             <Button Grid.Row="0" Grid.Column="2"
-                Content="Pasirinkti"
-                Command="{Binding SelectGenFile}"/>
+                    Content="Pasirinkti"
+                    Command="{Binding SelectGenFile}"/>
 
             <!--Operation numbers file selection row-->
             <TextBlock Grid.Row="1" Grid.Column="0"
                    Text="Pasirinkite operacijų numerių failą:"
                    Margin="0,16,16,0"/>
             <TextBox Grid.Row="1" Grid.Column="1"
-                 IsReadOnly="False"
-                 Margin="0,16,24,0"
-                 Text="{Binding OperationsFileFullPath}"/>
+                     IsReadOnly="False"
+                     Margin="0,16,24,0"
+                     Text="{Binding OperationsFileName}"
+                     ToolTip="{Binding OperationsFileFullPath}"/>
             <Button Grid.Row="1" Grid.Column="2"
-                Content="Pasirinkti"
-                Margin="0,16,0,0"
-                Command="{Binding SelectOperationsFile}"/>
+                    Content="Pasirinkti"
+                    Margin="0,16,0,0"
+                    Command="{Binding SelectOperationsFile}"/>
 
             <!--GEN file starting line-->
             <TextBlock Grid.Row="2" Grid.Column="0"
-                   Text="Duomenų eilutės pradžia (imtinai):"
-                   Margin="0,16,16,0"/>
+                       Text="Duomenų eilutės pradžia (imtinai):"
+                       Margin="0,16,16,0"/>
             <TextBox Grid.Row="2" Grid.Column="1"
-                 Margin="0,16,16,0"
-                 HorizontalAlignment="Left"
-                 Width="50"
-                 Text="{Binding LineStart}"/>
+                     Margin="0,16,16,0"
+                     HorizontalAlignment="Left"
+                     Width="50"
+                     Text="{Binding LineStart}"/>
 
             <!--Execute-->
-            <Button  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
-                 Content="Generuoti"
-                 Command="{Binding ExecuteExport}"
-                 Width="100"
-                 Margin="0,32,0,0"/>
+            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                    Content="Generuoti"
+                    Command="{Binding ExecuteExport}"
+                    Width="100"
+                    Margin="0,32,0,0"/>
 
             <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-              Grid.Column="0" Grid.ColumnSpan="3"
-              Grid.Row="0" Grid.RowSpan="3">
+                  Grid.Column="0" Grid.ColumnSpan="3"
+                  Grid.Row="0" Grid.RowSpan="3">
+                
                 <materialDesign:Card UniformCornerRadius="14" Padding="4" Width="50" Height="50">
                     <ProgressBar Height="30" Width="30" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" />
                 </materialDesign:Card>

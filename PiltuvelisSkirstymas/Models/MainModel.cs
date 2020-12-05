@@ -11,6 +11,9 @@ namespace PiltuvelisSkirstymas.Models
 
         private bool _isLoading;
 
+        private string _genFileName;
+        private string _operationsFileName;
+
         private string _genFileFullPath;
         private string _operationsFileFullPath;
         private int _lineStart;
