@@ -2,10 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PiltuvelisSkirstymas.Services.Config;
-using PiltuvelisSkirstymas.Services.Logger;
 using PiltuvelisSkirstymas.Services.Mapper;
 using PiltuvelisSkirstymas.ViewModels;
+using Serilog;
 using System.IO;
+using System.IO.Abstractions;
 using System.Windows;
 
 namespace PiltuvelisSkirstymas
@@ -31,14 +32,26 @@ namespace PiltuvelisSkirstymas
 
             var config = builder.Build();
 
+            var logger = new LoggerConfiguration()
+                        .WriteTo.Async(conf =>
+                            conf.File(
+                                path: "Logs/log.txt",
+                                rollingInterval: RollingInterval.Day,
+                                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}]:[{Level:u3}]: {Message:lj}{NewLine}{Exception}"))
+                        .CreateLogger();
+
             services.AddSingleton<MainViewModel>();
-            services.AddSingleton<ILogService, LogService>();
+
+            services.AddSingleton<ILogger>(l => logger);
+
             services.AddSingleton<IEipReader, EipReader>();
             services.AddSingleton<IEipWriter, EipWriter>();
-            services.AddSingleton<IConfig, Configuration>();
             services.AddSingleton<IOperationsReader, OperationsFileReader>();
+
+            services.AddSingleton<IConfig, Configuration>();
             services.AddSingleton<IMapper, Mapper>();
             services.AddSingleton<IConfiguration>(s => config);
+            services.AddSingleton<IFileSystem, FileSystem>();
             services.AddSingleton<MainWindow>();
         }
 

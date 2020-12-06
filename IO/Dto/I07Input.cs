@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Serialization;
@@ -12,6 +13,7 @@ namespace IO.Dto
         public int LineNr { get; set; }
 
         private string[] _code;
+
         [XmlElement("I07_KODAS")]
         public string[] Code
         {
@@ -23,6 +25,7 @@ namespace IO.Dto
         public string Name { get; set; }
 
         private string _maker;
+
         [XmlElement("I07_KODAS_IS")]
         public string Maker
         {

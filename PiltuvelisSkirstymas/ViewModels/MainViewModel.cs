@@ -4,11 +4,11 @@ using Microsoft.Win32;
 using PiltuvelisSkirstymas.Enums;
 using PiltuvelisSkirstymas.Models;
 using PiltuvelisSkirstymas.Services.Mapper;
-using PiltuvelisSkirstymas.Services.Logger;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Serilog;
 
 namespace PiltuvelisSkirstymas.ViewModels
 {
@@ -16,13 +16,13 @@ namespace PiltuvelisSkirstymas.ViewModels
     {
         private bool _fileSelectWasOpened;
 
-        private readonly ILogService _logger;
+        private readonly ILogger _logger;
         private readonly IEipReader _eipReader;
         private readonly IEipWriter _eipWriter;
         private readonly IOperationsReader _operationsReader;
         private readonly IMapper _mapper;
 
-        public MainViewModel(ILogService logger,
+        public MainViewModel(ILogger logger,
             IEipReader eipReader,
             IEipWriter eipWriter,
             IOperationsReader operationsReader,
