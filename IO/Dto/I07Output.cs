@@ -16,12 +16,12 @@ namespace IO.Dto
             Code = input.Code.First();
             Maker = input.Maker;
             DateString = input.DateString;
-            Details1 = input.Details1.Trim();
-            Details2 = input.Details2.Trim();
-            Details3 = input.Details3.Trim();
+            Details1 = !string.IsNullOrWhiteSpace(input.Details1.Trim()) ? input.Details1.Trim() : " ";//Space is needed to render open/closing tags in xml
+            Details2 = !string.IsNullOrWhiteSpace(input.Details2.Trim()) ? input.Details2.Trim() : " ";
+            Details3 = !string.IsNullOrWhiteSpace(input.Details3.Trim()) ? input.Details3.Trim() : " ";
             Amount = input.Amount;
             Pap2 = input.LineNr;
-            DimDate = input.DimDateDateTime != default ? input.DimDate : string.Empty;
+            DimDate = input.DimDateDateTime != default ? input.DimDate : " ";
         }
 
         [XmlElement("I07_KODAS_PO")]

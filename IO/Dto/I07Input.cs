@@ -38,7 +38,7 @@ namespace IO.Dto
         [XmlElement("I07_GALIOJA_IKI")]
         public string DateString
         {
-            get => DateDateTime.ToString("yyyy-MM-dd"); 
+            get => DateDateTime.ToString("yyyy.MM.dd"); 
             set => DateDateTime = DateTime.ParseExact(value, "yyyy.MM.dd HH:mm", CultureInfo.InvariantCulture); 
         }
 
@@ -73,8 +73,10 @@ namespace IO.Dto
         {
             get => DimDateDateTime.ToString("yyyy.MM.dd");
             set 
-            { 
-                DateTime.TryParseExact(value, "yyyy.MM.dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date);
+            {
+                if (!DateTime.TryParseExact(value, "yyyy.MM.dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                    DateTime.TryParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
                 DimDateDateTime = date;
             }
         }

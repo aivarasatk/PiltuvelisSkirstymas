@@ -152,11 +152,11 @@ namespace PiltuvelisSkirstymas.Tests
                     Amount = 1,
                     Maker = maker,
                     DateDateTime = new DateTime(2020,3,1),
-                    Details1 = "",
-                    Details2 = "",
-                    Details3 = "",
+                    Details1 = "a",
+                    Details2 = "b",
+                    Details3 = "c",
                     _pap2 = "1",
-                    DimDateDateTime = default
+                    DimDateDateTime = new DateTime(2020,3,2)
                 }
             };
 
@@ -175,13 +175,13 @@ namespace PiltuvelisSkirstymas.Tests
             {
                 return o.Code == "sdasad"
                     && o.Amount == 1
-                    && o.DateString == "2020-03-01"
+                    && o.DateString == "2020.03.01"
                     && o.Maker == maker
-                    && o.Details1 == ""
-                    && o.Details2 == ""
-                    && o.Details3 == ""
+                    && o.Details1 == "a"
+                    && o.Details2 == "b"
+                    && o.Details3 == "c"
                     && o.Pap2 == 1
-                    && o.DimDate == "";
+                    && o.DimDate == "2020.03.02";
             }));
         }
     }
