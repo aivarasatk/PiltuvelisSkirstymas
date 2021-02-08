@@ -37,7 +37,6 @@ namespace PiltuvelisSkirstymas.ViewModels
         private void InitializeModel()
         {
             Model.SelectGenFile = new RelayCommand(() => GenFileSelect(fileExtension: "eip"));
-            Model.SelectOperationsFile = new RelayCommand(() => OperationsFileSelect(fileExtension: "xlsx"));
             Model.ExecuteExport = new AsyncRelayCommand(OnExecuteExport);
         }
 
@@ -45,12 +44,6 @@ namespace PiltuvelisSkirstymas.ViewModels
         {
             Model.GenFileFullPath = FileSelect(fileExtension);
             Model.GenFileName = Path.GetFileName(Model.GenFileFullPath);
-        }
-
-        private void OperationsFileSelect(string fileExtension)
-        {
-            Model.OperationsFileFullPath = FileSelect(fileExtension);
-            Model.OperationsFileName = Path.GetFileName(Model.OperationsFileFullPath);
         }
 
         private string FileSelect(string fileExtension)
@@ -75,9 +68,7 @@ namespace PiltuvelisSkirstymas.ViewModels
 
         private async Task OnExecuteExport()
         {
-            if (string.IsNullOrWhiteSpace(Model.GenFileFullPath)
-                || string.IsNullOrWhiteSpace(Model.OperationsFileFullPath)
-                || Model.LineStart <= 0)
+            if (string.IsNullOrWhiteSpace(Model.GenFileFullPath) || Model.LineStart <= 0)
             {
                 ShowFadingStatusBarMessage(MessageType.Error, "Yra įvesties klaidų, patikrinkite ar pasirinkti failai ir nustatytas eilutes numeris");
                 return;
