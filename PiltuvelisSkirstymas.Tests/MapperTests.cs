@@ -16,7 +16,7 @@ namespace PiltuvelisSkirstymas.Tests
         {
             //Arrange
             var configMock = new Mock<IConfig>();
-            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "V1"), new Maker("T2", "V2") });
+            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T0", "0001100"), new Maker("T2", "00011001") });
 
             var mapper = new Mapper(configMock.Object);
 
@@ -38,14 +38,8 @@ namespace PiltuvelisSkirstymas.Tests
                 }
             };
 
-            var operationCodes = new Dictionary<string, string>
-            {
-                ["K1"] = "125458",
-                ["K2"] = "127475458",
-            };
-
             //Act & Assert
-            Assert.Throws<ArgumentException>(() => mapper.MapToOutput(input, operationCodes));
+            Assert.Throws<ArgumentException>(() => mapper.MapToOutput(input));
         }
 
         [Fact]
@@ -53,7 +47,7 @@ namespace PiltuvelisSkirstymas.Tests
         {
             //Arrange
             var configMock = new Mock<IConfig>();
-            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "V1"), new Maker("T2", "V2") });
+            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "0001100"), new Maker("T2", "00011001") });
 
             var mapper = new Mapper(configMock.Object);
 
@@ -75,14 +69,8 @@ namespace PiltuvelisSkirstymas.Tests
                 }
             };
 
-            var operationCodes = new Dictionary<string, string>
-            {
-                ["V1"] = "125458",
-                ["V2"] = "127475458",
-            };
-
             //Act & Assert
-            Assert.Throws<ArgumentException>(() => mapper.MapToOutput(input, operationCodes));
+            Assert.Throws<ArgumentException>(() => mapper.MapToOutput(input));
         }
 
         [Theory]
@@ -94,7 +82,7 @@ namespace PiltuvelisSkirstymas.Tests
         {
             //Arrange
             var configMock = new Mock<IConfig>();
-            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "V1"), new Maker("T2", "V2"), new Maker("K1", "V3") });
+            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "0301100"), new Maker("T2", "00011001"), new Maker("K1", "0001102") });
 
             var mapper = new Mapper(configMock.Object);
 
@@ -116,15 +104,8 @@ namespace PiltuvelisSkirstymas.Tests
                 }
             };
 
-            var operationCodes = new Dictionary<string, string>
-            {
-                ["V1"] = "125458",
-                ["V2"] = "127475458",
-                ["V3"] = "7439547",
-            };
-
             //Act 
-            var output = mapper.MapToOutput(input, operationCodes).ToArray();
+            var output = mapper.MapToOutput(input).ToArray();
 
             //Assert
             Assert.True(output.Length == excpectedMappedCount);
@@ -138,7 +119,7 @@ namespace PiltuvelisSkirstymas.Tests
         {
             //Arrange
             var configMock = new Mock<IConfig>();
-            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "V1"), new Maker("T2", "V2"), new Maker("K1", "V3") });
+            configMock.Setup(c => c.Makers).Returns(new[] { new Maker("T1", "7001100"), new Maker("T2", "0741100"), new Maker("K1", "1101100") });
 
             var mapper = new Mapper(configMock.Object);
 
@@ -160,15 +141,8 @@ namespace PiltuvelisSkirstymas.Tests
                 }
             };
 
-            var operationCodes = new Dictionary<string, string>
-            {
-                ["V1"] = "125458",
-                ["V2"] = "127475458",
-                ["V3"] = "7439547",
-            };
-
             //Act 
-            var output = mapper.MapToOutput(input, operationCodes);
+            var output = mapper.MapToOutput(input);
 
             //Assert
             Assert.True(output.All(o =>

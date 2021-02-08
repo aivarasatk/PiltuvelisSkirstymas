@@ -19,19 +19,16 @@ namespace PiltuvelisSkirstymas.ViewModels
         private readonly ILogger _logger;
         private readonly IEipReader _eipReader;
         private readonly IEipWriter _eipWriter;
-        private readonly IOperationsReader _operationsReader;
         private readonly IMapper _mapper;
 
         public MainViewModel(ILogger logger,
             IEipReader eipReader,
             IEipWriter eipWriter,
-            IOperationsReader operationsReader,
             IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eipReader = eipReader ?? throw new ArgumentNullException(nameof(eipReader));
             _eipWriter = eipWriter ?? throw new ArgumentNullException(nameof(eipWriter));
-            _operationsReader = operationsReader ?? throw new ArgumentNullException(nameof(operationsReader));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             InitializeModel();
@@ -90,8 +87,7 @@ namespace PiltuvelisSkirstymas.ViewModels
             try
             {
                 var eipData = await _eipReader.GetParsedEipContentsAsync(Model.GenFileFullPath);
-                var operationCodes = await _operationsReader.OperationCodes(Model.OperationsFileFullPath);
-                var output = _mapper.MapToOutput(eipData.Where(e => e.LineNr >= Model.LineStart), operationCodes);
+                var output = _mapper.MapToOutput(eipData.Where(e => e.LineNr >= Model.LineStart));
                 await _eipWriter.WriteAsync(new IO.Dto.I06Output(output.ToArray()));
 
                 ShowFadingStatusBarMessage(MessageType.Information, "Baigta. Sugeneruotas failas išvesties aplanke");

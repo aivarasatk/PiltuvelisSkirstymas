@@ -9,6 +9,6 @@ namespace PiltuvelisSkirstymas.Services.Mapper
 {
     public interface IMapper
     {
-        IEnumerable<I07Output> MapToOutput(IEnumerable<I07Input> input, IDictionary<string, string> operationCodes);
+        IEnumerable<I07Output> MapToOutput(IEnumerable<I07Input> input);
     }
 }

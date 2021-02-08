@@ -46,7 +46,6 @@ namespace PiltuvelisSkirstymas
 
             services.AddSingleton<IEipReader, EipReader>();
             services.AddSingleton<IEipWriter, EipWriter>();
-            services.AddSingleton<IOperationsReader, OperationsFileReader>();
 
             services.AddSingleton<IConfig, Configuration>();
             services.AddSingleton<IMapper, Mapper>();

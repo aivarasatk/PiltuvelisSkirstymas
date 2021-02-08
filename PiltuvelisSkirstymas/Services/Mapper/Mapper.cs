@@ -21,15 +21,13 @@ namespace PiltuvelisSkirstymas.Services.Mapper
         /// <param name="operationCodes">Operation code list containing verbose maker keys and reference code values</param>
         /// <returns>List of exploded products ready for import</returns>
         /// <exception cref="ArgumentException">Throws if any of the input values does contain valid Maker (xml I07_KODAS_IS) keys </exception>
-        public IEnumerable<I07Output> MapToOutput(IEnumerable<I07Input> input,
-            IDictionary<string, string> operationCodes)
+        public IEnumerable<I07Output> MapToOutput(IEnumerable<I07Input> input)
         {
-            var mappedOperationCodes = MapOperationCodes(operationCodes);
-            return ToOutput(input, mappedOperationCodes);
+            return ToOutput(input, _config.Makers);
         }
 
         private IEnumerable<I07Output> ToOutput(IEnumerable<I07Input> input, 
-            IEnumerable<KeyValuePair<string, string>> mappedOperationCodes)
+            IEnumerable<Maker> mappedOperationCodes)
         {
             var output = new List<I07Output>();
             foreach(var product in input)
@@ -49,28 +47,18 @@ namespace PiltuvelisSkirstymas.Services.Mapper
         /// </summary>
         /// <param name="product"></param>
         /// <returns>Enumerable of I07 based on department count</returns>
-        private IEnumerable<I07Output> Explode(I07Input product, IEnumerable<KeyValuePair<string,string>> mappedOperationCodes)
+        private IEnumerable<I07Output> Explode(I07Input product, IEnumerable<Maker> mappedOperationCodes)
         {
-            foreach(var (key, value) in mappedOperationCodes)
+            foreach(var (key, operationCode) in mappedOperationCodes)
             {
                 if (!product.Maker.Contains(key))
                     continue;
 
                 var output = new I07Output(product);
-                output.ReferenceNumber = value;
+                output.ReferenceNumber = operationCode;
 
                 yield return output;
             }
-        }
-        
-
-        private IEnumerable<KeyValuePair<string, string>> MapOperationCodes(IDictionary<string, string> operationCodes)
-        {
-            return _config.Makers
-                .Join(operationCodes,
-                    maker => maker.Value,
-                    oc => oc.Key,
-                    (m, o) => new KeyValuePair<string,string>(m.Key, o.Value));
         }
     }
 }

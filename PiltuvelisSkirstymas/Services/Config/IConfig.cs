@@ -7,5 +7,5 @@ namespace PiltuvelisSkirstymas.Services.Config
         IEnumerable<Maker> Makers { get; init; }
     }
 
-    public record Maker(string Key, string Value);
+    public record Maker(string Key, string OperationCode);
 }
